@@ -10,6 +10,22 @@ const mockUser = {
   password: '12345',
 };
 
+const registerAndLogin = async (userProps = {}) => {
+  const password = userProps.password ?? mockUser.password;
+
+  // Create an "agent" that gives us the ability
+  // to store cookies between requests in a test
+  const agent = request.agent(app);
+
+  // Create a user to sign in with
+  const user = await UserService.create({ ...mockUser, ...userProps });
+
+  // ...then sign in
+  const { email } = user;
+  await agent.post('/api/v1/users/sessions').send({ email, password });
+  return [agent, user];
+};
+
 describe('User route tests', () => {
 
   beforeEach(() => {
@@ -22,8 +38,6 @@ describe('User route tests', () => {
 
   it('creates a new user', async () => {
     const res = await request(app).post('/api/v1/users').send(mockUser);
-    console.log('<<<<=================>>>');
-    console.log(res.body);
 
     const { email } = mockUser;
 
@@ -32,4 +46,15 @@ describe('User route tests', () => {
       email,
     });
   });
+
+  // it('logs in a mock user', async () => {
+  //   const [agent, user] = await registerAndLogin();
+  //   const sessions = await agent.get('/api/v1/sessions');
+  //   expect(sessions.body).toEqual({
+  //     ...user,
+  //     exp: expect.any(Number),
+  //     iat: expect.any(Number),
+  //   });
+  // });
+
 });
