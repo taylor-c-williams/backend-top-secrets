@@ -6,29 +6,11 @@ const UserService = require('../lib/services/UserService');
 
 // Dummy user for testing
 const mockUser = {
-  firstName: 'Test',
-  lastName: 'User',
   email: 'test@example.com',
   password: '12345',
 };
 
-const registerAndLogin = async (userProps = {}) => {
-  const password = userProps.password ?? mockUser.password;
-
-  // Create an "agent" that gives us the ability
-  // to store cookies between requests in a test
-  const agent = request.agent(app);
-
-  // Create a user to sign in with
-  const user = await UserService.create({ ...mockUser, ...userProps });
-
-  // ...then sign in
-  const { email } = user;
-  await agent.post('/api/v1/users/sessions').send({ email, password });
-  return [agent, user];
-};
-
-describe('lazy-bouncer routes', () => {
+describe('User route tests', () => {
 
   beforeEach(() => {
     return setup(pool);
@@ -40,6 +22,9 @@ describe('lazy-bouncer routes', () => {
 
   it('creates a new user', async () => {
     const res = await request(app).post('/api/v1/users').send(mockUser);
+    console.log('<<<<=================>>>');
+    console.log(res.body);
+
     const { email } = mockUser;
 
     expect(res.body).toEqual({
