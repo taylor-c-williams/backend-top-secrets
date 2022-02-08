@@ -11,4 +11,8 @@ describe('backend routes', () => {
   afterAll(() => {
     pool.end();
   });
+
+  it('is a dummy test', async () => {
+    expect(true).toBeTruthy;
+  })
 });
