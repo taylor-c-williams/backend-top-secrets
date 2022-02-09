@@ -53,16 +53,15 @@ describe('User route tests', () => {
     });
   });
 
-  // it('logs out a mock user by deleting a session', async () => {
-  //   const [agent, user] = await registerAndLogin();
-  //   const sessions = await agent.get('/api/v1/sessions');
-  //   console.log(sessions.body);
-  //   expect(sessions.body).toEqual({
-  //     ...user,
-  //     exp: expect.any(Number),
-  //     iat: expect.any(Number),
-  //   });
+  it('logs a user out', async () => {
+    const [agent] = await registerAndLogin();
+    const res = await agent.delete('/api/v1/users/login').send(mockUser);
 
-  // });
+    expect(res.body).toEqual({
+      success: true,
+      message: 'Logged out successfully!',
+    });
+  });
+
 
 });
