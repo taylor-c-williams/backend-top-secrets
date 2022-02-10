@@ -1,13 +1,4 @@
--- Use this file to define your SQL tables
--- The SQL in this file will be executed when you run `npm run setup-db`
-
--- Two Tables: Users and Secrets
-
--- Users:
--- Email
--- Hashed Password
-
-DROP TABLE IF EXISTS users cascade;
+DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -15,12 +6,12 @@ CREATE TABLE users (
   password_hash TEXT NOT NULL
 );
 
--- DROP TABLE IF EXISTS secrets;
+DROP TABLE IF EXISTS secrets;
 
--- CREATE TABLE secrets (
---   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
---   title TEXT NOT NULL,
---   description TEXT NOT NULL,
---   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
---   user_id REFERENCES users(id)
---   );
+CREATE TABLE secrets (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id BIGINT REFERENCES users(id),
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+  );
