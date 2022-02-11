@@ -20,6 +20,7 @@ const registerAndLogin = async () => {
   const user = await UserService.create({ ...mockUser });
   const { email } = user;
   await agent.post('/api/v1/users/login').send({ email, password });
+  await agent.post('/api/v1/secrets').send({ ...mockSecret, user_id: user.id });
   return [agent, user];
 };
 
@@ -48,14 +49,14 @@ describe('Secret route tests', () => {
 
 
   it('allows a logged in user to GET a list of all secrets', async () => {
-    const [agent, user] = await registerAndLogin();
+    const [agent] = await registerAndLogin();
     const res = await agent.get('/api/v1/secrets');
-    expect(res.body).toEqual({
-      id: expect.any(String),
-      createdAt: expect.any(String),
-      userId: expect.any(String),
-      ...mockSecret,
-    });
+    expect(res.body).toEqual([{
+      createdAt: expect.any(String), 
+      description: 'this is a secret shhh', 
+      id: expect.any(String), 
+      title: 'secret title', 
+      userId: '1' }]);
   });
 
 });
